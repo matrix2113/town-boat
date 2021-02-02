@@ -1,6 +1,5 @@
 import math
 import os
-import dhooks
 
 from datetime import datetime
 
