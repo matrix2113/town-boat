@@ -10,6 +10,12 @@ discord = "*"
 aiohttp = "*"
 colorama = "*"
 motor = "*"
+pymongo = "*"
+dnspython = "*"
 
 [requires]
 python_version = "3.8"
+
+[scripts]
+townboat = "python bot.py"
+bot = "python bot.py"

@@ -16,11 +16,11 @@ class TownBoat(commands.Bot):
         intents = discord.Intents.default()
         intents.members = True
 
-        super().__init__(command_prefix="!", intents=intents, owner_id=os.environ["TOWNBOAT_OWNER"],
+        super().__init__(command_prefix="=", intents=intents, owner_id=os.environ["TOWNBOAT_OWNER"],
                          chunk_guilds_at_startup=False, heartbeat_timeout=150.0,
                          allowed_mentions=discord.AllowedMentions.none())
-        self.session = Optional[aiohttp.ClientSession] = None
-        # self.db = DatabaseManager(os.environ["TOWNBOAT_MONGO"], self.loop)
+        self.session = Optional[aiohttp.ClientSession]
+        self.db = DatabaseManager(mongo_uri=os.environ["TOWNBOAT_MONGO"], loop=self.loop)
 
     async def on_connect(self) -> None:
         self.session = aiohttp.ClientSession(loop=self.loop)
