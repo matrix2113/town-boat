@@ -22,4 +22,4 @@ jobs:
       continue-on-error: true
     - name: Black
       run: |
-        black . --diff --check
+        black .
