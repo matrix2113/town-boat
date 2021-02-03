@@ -12,6 +12,7 @@ colorama = "*"
 motor = "*"
 pymongo = "*"
 dnspython = "*"
+humanize = "*"
 
 [requires]
 python_version = "3.8"
