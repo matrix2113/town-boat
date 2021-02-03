@@ -10,6 +10,13 @@ UNICODE_EMOJI = r'(?:\U0001f1e6[\U0001f1e8-\U0001f1ec\U0001f1ee\U0001f1f1\U0001f
 UNICODE_EMOJI_REGEX = re.compile(UNICODE_EMOJI)
 
 
+def tryint(x: str) -> Union[str, int]:
+    try:
+        return int(x)
+    except (ValueError, TypeError):
+        return x
+
+
 class UnicodeEmoji:
     def __init__(self, id: str) -> None:
         self.id = id
