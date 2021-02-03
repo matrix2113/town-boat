@@ -57,8 +57,8 @@ class Roles(commands.Cog):
         msg_roles = list(filter(lambda r: int(r.message_id) == payload.message_id and tryint(r.emoji_id) == emoji_id, reaction_roles))
 
         if msg_roles:
-            guild = self.bot.get_guild(payload.guild_id)
-            member = guild.get_member(payload.user_id)
+            guild = self.bot.get_guild(int(payload.guild_id))
+            member = guild.get_member(int(payload.user_id))
             role = guild.get_role(int(msg_roles[0].role_id))
             await member.add_roles(role, reason='Reaction Role')
 
@@ -70,8 +70,8 @@ class Roles(commands.Cog):
         msg_roles = list(filter(lambda r: int(r.message_id) == payload.message_id and tryint(r.emoji_id) == emoji_id, reaction_roles))
 
         if len(msg_roles) == 1:
-            guild = self.bot.get_guild(payload.guild_id)
-            member = guild.get_member(payload.user_id)
+            guild = self.bot.get_guild(int(payload.guild_id))
+            member = guild.get_member(int(payload.user_id))
             role = guild.get_role(int(msg_roles[0].role_id))
             await member.remove_roles(role, reason='Reaction Role')
 
