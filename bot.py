@@ -1,17 +1,21 @@
 import asyncio
 import os
+import sys
+
 from typing import Any, Dict, List, Optional, Union
 
 import aiohttp
 import discord
 
 from discord.ext import commands
+from motor.motor_asyncio import AsyncIOMotorClient
 
 from core.database import DatabaseManager
 from core.logging import log_message
 
 initial_cogs = [
-    "cogs.general"
+    "cogs.general",
+    "cogs.roles"
 ]
 
 
@@ -24,8 +28,16 @@ class TownBoat(commands.Bot):
                          chunk_guilds_at_startup=False, heartbeat_timeout=150.0,
                          allowed_mentions=discord.AllowedMentions.none())
         self.session = Optional[aiohttp.ClientSession]
-        self.db = DatabaseManager(mongo_uri=os.environ["TOWNBOAT_MONGO"], loop=self.loop)
         self.remove_command("help")
+
+        try:
+            self.db = DatabaseManager(mongo_uri=os.environ["TOWNBOAT_MONGO"], loop=self.loop)
+        except KeyError:
+            log_message('err', 0, 'database', 'database', 'mongo uri is missing from your environmental variables')
+            sys.exit(0)
+        except Exception as e:
+            log_message('err', 0, 'database', 'database', e)
+            sys.exit(0)
 
     async def on_connect(self) -> None:
         self.session = aiohttp.ClientSession(loop=self.loop)
