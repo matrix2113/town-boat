@@ -10,6 +10,10 @@ from discord.ext import commands
 from core.database import DatabaseManager
 from core.logging import log_message
 
+initial_cogs = [
+    "cogs.general"
+]
+
 
 class TownBoat(commands.Bot):
     def __init__(self):
@@ -21,6 +25,7 @@ class TownBoat(commands.Bot):
                          allowed_mentions=discord.AllowedMentions.none())
         self.session = Optional[aiohttp.ClientSession]
         self.db = DatabaseManager(mongo_uri=os.environ["TOWNBOAT_MONGO"], loop=self.loop)
+        self.remove_command("help")
 
     async def on_connect(self) -> None:
         self.session = aiohttp.ClientSession(loop=self.loop)
@@ -28,6 +33,13 @@ class TownBoat(commands.Bot):
 
     async def on_ready(self) -> None:
         log_message('info', 0, 'central', 'central', 'ready')
+
+        for extension in initial_cogs:
+            try:
+                self.load_extension(extension)
+                log_message("info", "0", "central", "cog_loader", f"successfully loaded {extension}")
+            except Exception as e:
+                log_message("err", 0, "central", "cog_loader", f"failed to load {extension}\n{e}")
 
     def run(self, *args, **kwargs):
         try:
