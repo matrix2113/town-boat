@@ -42,7 +42,7 @@ class Roles(commands.Cog):
     async def rr_remove(self, ctx, message_id: int, role: discord.Role) -> None:
         """Remove an emoji from reaction roles"""
         try:
-            role_info = (await self.bot.db.get_guild_config(ctx.guild.id)).reaction_role.get_kv(message_id, str(message_id))
+            role_info = (await self.bot.db.get_guild_config(ctx.guild.id)).reaction_role.get_kv('message_id', str(message_id))
         except IndexError:
             return await ctx.send("There was an error fetching that message.")
 
