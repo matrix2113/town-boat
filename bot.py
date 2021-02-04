@@ -2,13 +2,12 @@ import asyncio
 import os
 import sys
 
-from typing import Any, Dict, List, Optional, Union
+from typing import Optional
 
 import aiohttp
 import discord
 
 from discord.ext import commands
-from motor.motor_asyncio import AsyncIOMotorClient
 
 from core.database import DatabaseManager
 from core.logging import log_message
@@ -38,7 +37,7 @@ class TownBoat(commands.Bot):
         try:
             self.db = DatabaseManager(mongo_uri=os.environ["TOWNBOAT_MONGO"], loop=self.loop)
         except KeyError:
-            log_message('err', 0, 'database', 'database', 'mongo uri is missing from your environmental variables')
+            log_message('err', 0, 'database', 'database', "mongo uri is missing from your env")
             sys.exit(0)
         except Exception as e:
             log_message('err', 0, 'database', 'database', e)
@@ -58,7 +57,7 @@ class TownBoat(commands.Bot):
             except Exception as e:
                 log_message("err", 0, "central", "cog_loader", f"failed to load {extension}\n{e}")
 
-    def run(self, *args, **kwargs):
+    def run(self):
         try:
             self.loop.run_until_complete(self.start(os.environ["TOWNBOAT_TOKEN"]))
         except KeyboardInterrupt:
@@ -76,9 +75,9 @@ class TownBoat(commands.Bot):
             try:
                 self.loop.run_until_complete(asyncio.gather(*asyncio.all_tasks(self.loop)))
             except asyncio.CancelledError:
-                log_message('err', 0, "central", "central", f"all pending tasks have been stopped")
+                log_message('err', 0, "central", "central", "all pending tasks have been stopped")
             finally:
-                log_message('err', 0, 'central', 'central', f"shutting down bot")
+                log_message('err', 0, 'central', 'central', "shutting down bot")
 
 
 bot = TownBoat()

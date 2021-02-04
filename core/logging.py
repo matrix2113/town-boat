@@ -36,7 +36,7 @@ def halve_string(s):
     }
 
 
-def log_message(level, shard, sender, source, msg):
+def log_message(level, shard, sender, source, msg) -> object:
     message = f"{dateToStr(date=datetime.utcnow())} [shard {str(shard)}] <{sender}@{source}> {msg}"
 
     if level == "warn":
