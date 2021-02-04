@@ -37,7 +37,6 @@ DEFAULT: Dict[str, Any] = {
         'channel_lockdown': None,
         'channel_slowmode': None
     },
-    'time_offset': 0,
     'detections': {
         'filters': [],
         'regex_filters': [],
@@ -54,99 +53,6 @@ DEFAULT: Dict[str, Any] = {
         'caps_message_percent': None,
         'caps_message_min_words': None
     },
-    'detection_punishments': {
-        'filters': {
-            "warn": 1,
-            "mute": None,
-            "kick": False,
-            "ban": False,
-            "delete": True
-        },
-        'regex_filters': {
-            "warn": 1,
-            "mute": None,
-            "kick": False,
-            "ban": False,
-            "delete": True
-        },
-        'image_filters': {
-            "warn": 1,
-            "mute": None,
-            "kick": False,
-            "ban": False,
-            "delete": True
-        },
-        'block_invite': {
-            "warn": 1,
-            "mute": "10 minutes",
-            "kick": False,
-            "ban": False,
-            "delete": True
-        },
-        'english_only': {
-            "warn": 0,
-            "mute": None,
-            "kick": False,
-            "ban": False,
-            "delete": True
-        },
-        'mention_limit': {
-            "warn": 1,
-            "mute": "10 minutes",
-            "kick": False,
-            "ban": False,
-            "delete": True
-        },
-        'spam_detection': {
-            "warn": 1,
-            "mute": "10 minutes",
-            "kick": False,
-            "ban": False,
-            "delete": True
-        },
-        'repetitive_message': {
-            "warn": 1,
-            "mute": "10 minutes",
-            "kick": False,
-            "ban": False,
-            "delete": True
-        },
-        'max_lines': {
-            "warn": 0,
-            "mute": None,
-            "kick": False,
-            "ban": False,
-            "delete": True
-        },
-        'max_words': {
-            "warn": 0,
-            "mute": None,
-            "kick": False,
-            "ban": False,
-            "delete": True
-        },
-        'max_characters': {
-            "warn": 0,
-            "mute": None,
-            "kick": False,
-            "ban": False,
-            "delete": True
-        },
-        'sexually_explicit': {
-            "warn": 1,
-            "mute": "10 minutes",
-            "kick": False,
-            "ban": False,
-            "delete": True
-        },
-        'caps_message': {
-            "warn": 0,
-            "mute": None,
-            "kick": False,
-            "ban": False,
-            "delete": True
-        }
-    },
     'alert': {
         'kick': None,
         'ban': None,
@@ -161,151 +67,14 @@ DEFAULT: Dict[str, Any] = {
         'message_id': None,
         'ended': False
     },
-    'perm_levels': [],
-    'command_levels': [],
-    'warn_punishments': [],
-    'notes': [],
     'warns': [],
     'mutes': [],
     'tags': [],
-    'whitelisted_guilds': [],
     'reaction_roles': [],
     'selfroles': [],
     'autoroles': [],
-    'ignored_channels': {
-        'filters': [],
-        'regex_filters': [],
-        'image_filters': [],
-        'block_invite': [],
-        'english_only': [],
-        'mention_limit': [],
-        'spam_detection': [],
-        'repetitive_message': [],
-        'max_lines': [],
-        'max_words': [],
-        'max_characters': [],
-        'sexually_explicit': [],
-        'caps_message': []
-    },
-    'ignored_channels_in_prod': [],
     'mute_role': None,
-    'prefix': '!!'
-}
-
-RECOMMENDED_DETECTIONS: Dict[str, Any] = {
-    'detections': {
-        'block_invite': True,
-        'english_only': True,
-        'mention_limit': 5,
-        'spam_detection': 5,
-        'repetitive_message': 15,
-        'max_lines': 15,
-        'max_words': 450,
-        'sexually_explicit': [
-            "EXPOSED_ANUS",
-            "EXPOSED_BELLY",
-            "EXPOSED_BUTTOCKS",
-            "EXPOSED_BREAST_F",
-            "EXPOSED_GENITALIA_F",
-            "COVERED_GENITALIA_F",
-            "EXPOSED_GENITALIA_M"
-        ],
-        'caps_message_percent': 0.80,
-        'caps_message_min_words': 10
-    },
-    'detection_punishments': {
-        'filters': {
-            "warn": 1,
-            "mute": None,
-            "kick": False,
-            "ban": False,
-            "delete": True
-        },
-        'regex_filters': {
-            "warn": 1,
-            "mute": None,
-            "kick": False,
-            "ban": False,
-            "delete": True
-        },
-        'image_filters': {
-            "warn": 1,
-            "mute": None,
-            "kick": False,
-            "ban": False,
-            "delete": True
-        },
-        'block_invite': {
-            "warn": 1,
-            "mute": "10 minutes",
-            "kick": False,
-            "ban": False,
-            "delete": True
-        },
-        'english_only': {
-            "warn": 0,
-            "mute": None,
-            "kick": False,
-            "ban": False,
-            "delete": True
-        },
-        'mention_limit': {
-            "warn": 1,
-            "mute": "10 minutes",
-            "kick": False,
-            "ban": False,
-            "delete": True
-        },
-        'spam_detection': {
-            "warn": 1,
-            "mute": "10 minutes",
-            "kick": False,
-            "ban": False,
-            "delete": True
-        },
-        'repetitive_message': {
-            "warn": 1,
-            "mute": "10 minutes",
-            "kick": False,
-            "ban": False,
-            "delete": True
-        },
-        'max_lines': {
-            "warn": 0,
-            "mute": None,
-            "kick": False,
-            "ban": False,
-            "delete": True
-        },
-        'max_words': {
-            "warn": 0,
-            "mute": None,
-            "kick": False,
-            "ban": False,
-            "delete": True
-        },
-        'max_characters': {
-            "warn": 0,
-            "mute": None,
-            "kick": False,
-            "ban": False,
-            "delete": True
-        },
-        'sexually_explicit': {
-            "warn": 1,
-            "mute": "10 minutes",
-            "kick": False,
-            "ban": False,
-            "delete": True
-        },
-        'caps_message': {
-            "warn": 0,
-            "mute": None,
-            "kick": False,
-            "ban": False,
-            "delete": True
-        }
-    }
+    'prefix': '='
 }
 
 

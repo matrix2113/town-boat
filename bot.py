@@ -15,14 +15,19 @@ from core.logging import log_message
 
 initial_cogs = [
     "cogs.general",
-    "cogs.roles"
+    "cogs.roles",
+    "cogs.owner"
 ]
+
+
+async def _get_prefix(self, ctx):
+    guild_conf = await self.db.get_guild_config(ctx.guild.id)
+
 
 
 class TownBoat(commands.Bot):
     def __init__(self):
-        intents = discord.Intents.default()
-        intents.members = True
+        intents = discord.Intents.all()
 
         super().__init__(command_prefix="=", intents=intents, owner_id=os.environ["TOWNBOAT_OWNER"],
                          chunk_guilds_at_startup=False, heartbeat_timeout=150.0,
