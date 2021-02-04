@@ -13,6 +13,8 @@ from core.database import DatabaseManager
 from core.logging import log_message
 
 initial_cogs = [
+    "cogs.audit",
+    "cogs.admin",
     "cogs.general",
     "cogs.roles",
     "cogs.owner"

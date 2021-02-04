@@ -53,6 +53,7 @@ DEFAULT: Dict[str, Any] = {
         'caps_message_percent': None,
         'caps_message_min_words': None
     },
+    'time_offset': 0,
     'alert': {
         'kick': None,
         'ban': None,

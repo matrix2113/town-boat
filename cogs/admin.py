@@ -12,7 +12,7 @@ class AdminConfig(commands.Cog):
         self.bot = bot
 
     @commands.command()
-    @commands.has_guild_permissions(manage_server=True)
+    @commands.has_guild_permissions(manage_guild=True)
     async def setlog(self, ctx, log: lower, channel: discord.TextChannel = None):
         chn_id = None
         if channel:

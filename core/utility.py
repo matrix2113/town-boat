@@ -1,5 +1,6 @@
 import re
 
+from datetime import timedelta
 from typing import Union
 
 import discord
@@ -15,6 +16,36 @@ def tryint(x: str) -> Union[str, int]:
         return int(x)
     except (ValueError, TypeError):
         return x
+
+
+def format_delta(delta: timedelta, *, assume_forever: bool=True):
+    if not delta:
+        if assume_forever:
+            return 'forever'
+        else:
+            '0 seconds'
+
+    minutes, seconds = divmod(int(delta.total_seconds()), 60)
+    hours, seconds = divmod(minutes, 60)
+    days, hours = divmod(hours, 24)
+    months, days = divmod(days, 30)
+    years, months = divmod(months, 12)
+
+    msg = ""
+    if seconds:
+        msg = f"{seconds} seconds " + msg
+    if minutes:
+        msg = f"{minutes} minutes " + msg
+    if hours:
+        msg = f"{hours} hours " + msg
+    if days:
+        msg = f"{hours} hours " + msg
+    if months:
+        msg = f"{months} months " + msg
+    if years:
+        msg = f"{years} years " + msg
+
+    return msg.strip()
 
 
 def lower(argument: str):
@@ -36,3 +67,10 @@ class EmojiOrUnicode(commands.Converter):
                     return UnicodeEmoji(argument)
                 else:
                     raise commands.BadArgument("Invalid emoji invoked")
+
+
+class QuickId:
+    def __init__(self, guild_id: int, _id: int):
+        self.guild_id = guild_id
+        self.id = _id
+
