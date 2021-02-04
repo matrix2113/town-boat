@@ -17,6 +17,10 @@ def tryint(x: str) -> Union[str, int]:
         return x
 
 
+def lower(argument: str):
+    return str(argument).lower()
+
+
 class UnicodeEmoji:
     def __init__(self, id: str) -> None:
         self.id = id
