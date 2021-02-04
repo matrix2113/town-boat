@@ -12,6 +12,8 @@ You can install Python 3.8 [here](https://www.python.org/downloads/). Recommende
 
 ### Linux
 
+You can either compile python yourself or use [pyenv](https://github.com/pyenv/pyenv).
+
 ```bash
 1. Download the source using "wget"
 2. Unzip the source using "tar"
@@ -28,3 +30,22 @@ Python 3.8.7
 > pip --version 
 pip 20.2.3 from /Dir/ (python3.8)
 ```
+
+
+### Pipenv
+
+You will need pipenv as the bot requires environmental variables to start the bot.
+
+```bash
+> pip install pipenv
+```
+Unless you have sudo privledges, you will need to add `--user` at the end of the command above.
+
+### Starting the Bot
+
+```bash
+cp .env.example .env
+pipenv install
+pipenv run townboat```
+
+Fill in the environmental variables in the `.env` file and you should be able to start.
