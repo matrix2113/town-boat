@@ -70,10 +70,20 @@ class Audit(commands.Cog):
             elif mode == "message_edit":
                 return #placeholder for later
             elif mode == "member_leave_vc":
-                embed = discord.Embed(title="User left Voice", description=f"{payload} ({payload.id}) has left `{extra}`")
+                embed = discord.Embed(description=f"User left `{extra}`", timestamp=datetime.utcnow())
+                embed.set_author(name=payload, icon_url=payload.avatar_url)
                 await log.send(embed=embed)
             elif mode == "member_join_vc":
-                embed = discord.Embed(title="User joined Voice", description=f"{payload} ({payload.id}) has joined `{extra}`")
+                embed = discord.Embed(description=f"User joined `{extra}`", timestamp=datetime.utcnow())
+                embed.set_author(name=payload, icon_url=payload.avatar_url)
+                await log.send(embed=embed)
+            elif mode == "member_mute_vc":
+                embed = discord.Embed(description=f"User is{'' if extra else ' not'} muted", timestamp=datetime.utcnow())
+                embed.set_author(name=payload, icon_url=payload.avatar_url)
+                await log.send(embed=embed)
+            elif mode == "member_deaf_vc":
+                embed = discord.Embed(description=f"User is{'' if extra else ' not'} deafened", timestamp=datetime.utcnow())
+                embed.set_author(name=payload, icon_url=payload.avatar_url)
                 await log.send(embed=embed)
 
     @commands.Cog.listener()
@@ -82,6 +92,49 @@ class Audit(commands.Cog):
         if not log_chn:
             return
         await self.push_audit(log_chn, msg, False, mode='message_delete')
+
+    @commands.Cog.listener()
+    async def on_raw_message_delete(self, payload: discord.RawMessageDeleteEvent):
+        if not payload.cached_message:
+            log_chn = await self.check_enabled(payload.guild_id, 'message_delete')
+            if not payload.guild_id or not log_chn:
+                return
+            await self.push_audit(log_chn, payload, True, 'deleted')
+
+    @commands.Cog.listener()
+    async def on_message_edit(self, before: discord.Message, after: discord.Message):
+        log_chn = await self.check_enabled(before.guild.id, 'message_edit')
+        if not log_chn:
+            return
+        await self.push_audit(log_chn, before, False, mode='message_edit', extra=after)
+
+    @commands.Cog.listener()
+    async def on_raw_message_edit(self, payload: discord.RawMessageDeleteEvent):
+        if not payload.cached_message:
+            log_chn = await self.check_enabled(payload.data.get('guild_id'), 'message_edit')
+            if not payload.data.get('guild_id') or not log_chn:
+                return
+            try:
+                await self.push_audit(log_chn, payload, True, f"updated: ```\n{payload.data['content']}\n```")
+            except KeyError:
+                pass
+
+    @commands.Cog.listener()
+    async def on_voice_state_update(self, member: discord.Member, before: discord.VoiceState, after: discord.VoiceState):
+        if member.bot:
+            return
+        log_chn = await self.check_enabled(member.guild.id, 'vc_state_change')
+        if not log_chn:
+            return
+        if before.channel != after.channel:
+            if before.channel:
+                await self.push_audit(log_chn, member, False, mode='member_leave_vc', extra=before.channel)
+            if after.channel:
+                await self.push_audit(log_chn, member, False, mode="member_join_vc", extra=after.channel)
+        if before.self_deaf != after.self_deaf:
+            await self.push_audit(log_chn, member, False, mode="member_deaf_vc", extra=after.deaf)
+        if before.self_mute != after.self_mute:
+            await self.push_audit(log_chn, member, False, mode="member_mute_vc", extra=after.mute)
 
 
 def setup(bot):
