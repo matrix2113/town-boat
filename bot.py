@@ -8,6 +8,7 @@ import aiohttp
 import discord
 
 from discord.ext import commands
+from pymongo.errors import ServerSelectionTimeoutError
 
 from core.database import DatabaseManager
 from core.logging import log_message
@@ -40,6 +41,9 @@ class TownBoat(commands.Bot):
             self.db = DatabaseManager(mongo_uri=os.environ["TOWNBOAT_MONGO"], loop=self.loop)
         except KeyError:
             log_message('err', 0, 'database', 'database', "mongo uri is missing from your env")
+            sys.exit(0)
+        except ServerSelectionTimeoutError:
+            log_message('err', 0, 'database', 'database', 'connection timed out, make sure your IP is whitelisted.')
             sys.exit(0)
         except Exception as e:
             log_message('err', 0, 'database', 'database', e)

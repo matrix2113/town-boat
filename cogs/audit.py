@@ -68,7 +68,18 @@ class Audit(commands.Cog):
                     embed.set_author(name=payload.author, icon_url=payload.author.avatar_url)
                     await log.send(embed=embed)
             elif mode == "message_edit":
-                return #placeholder for later
+                try:
+                    embed = discord.Embed(description=f"Message has been updated in <#{payload.channel.id}>", timestamp=datetime.utcnow())
+                    embed.add_field(name="Before", value=f"```{payload.content}```")
+                    embed.add_field(name="After", value=f"```{extra.content}```")
+                    embed.set_author(name=payload.author, icon_url=payload.author.avatar_url)
+                    await log.send(embed=embed)
+                except discord.HTTPException:
+                    embed = discord.Embed(description=f"Message ({payload.id}) has been updated in <#{payload.channel.id}>", timestamp=datetime.utcnow())
+                    embed.add_field(name="Before", value=f"```{payload.content}```")
+                    embed.add_field(name="After", value=f"```{extra.content}```")
+                    embed.set_author(name=payload.author, icon_url=payload.author.avatar_url)
+                    await log.send(embed=embed)
             elif mode == "member_leave_vc":
                 embed = discord.Embed(description=f"User left `{extra}`", timestamp=datetime.utcnow())
                 embed.set_author(name=payload, icon_url=payload.avatar_url)
@@ -77,17 +88,19 @@ class Audit(commands.Cog):
                 embed = discord.Embed(description=f"User joined `{extra}`", timestamp=datetime.utcnow())
                 embed.set_author(name=payload, icon_url=payload.avatar_url)
                 await log.send(embed=embed)
-            elif mode == "member_mute_vc":
-                embed = discord.Embed(description=f"User is{'' if extra else ' not'} muted", timestamp=datetime.utcnow())
+            elif mode == "member_guild_mute_vc":
+                embed = discord.Embed(color=discord.Color.red(), description=f"User is{'' if extra else ' not'} server muted", timestamp=datetime.utcnow())
                 embed.set_author(name=payload, icon_url=payload.avatar_url)
                 await log.send(embed=embed)
-            elif mode == "member_deaf_vc":
-                embed = discord.Embed(description=f"User is{'' if extra else ' not'} deafened", timestamp=datetime.utcnow())
+            elif mode == "member_guild_deaf_vc":
+                embed = discord.Embed(color=discord.Color.red(), description=f"User is{'' if extra else ' not'} server deafened", timestamp=datetime.utcnow())
                 embed.set_author(name=payload, icon_url=payload.avatar_url)
                 await log.send(embed=embed)
 
     @commands.Cog.listener()
     async def on_message_delete(self, msg: discord.Message):
+        if not msg.guild or msg.author.bot:
+            return
         log_chn = await self.check_enabled(msg.guild.id, 'message_delete')
         if not log_chn:
             return
@@ -103,6 +116,8 @@ class Audit(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message_edit(self, before: discord.Message, after: discord.Message):
+        if not before.guild or before.author.bot or before.content == after.content:
+            return
         log_chn = await self.check_enabled(before.guild.id, 'message_edit')
         if not log_chn:
             return
@@ -131,10 +146,10 @@ class Audit(commands.Cog):
                 await self.push_audit(log_chn, member, False, mode='member_leave_vc', extra=before.channel)
             if after.channel:
                 await self.push_audit(log_chn, member, False, mode="member_join_vc", extra=after.channel)
-        if before.self_deaf != after.self_deaf:
-            await self.push_audit(log_chn, member, False, mode="member_deaf_vc", extra=after.deaf)
-        if before.self_mute != after.self_mute:
-            await self.push_audit(log_chn, member, False, mode="member_mute_vc", extra=after.mute)
+        if before.deaf != after.deaf:
+            await self.push_audit(log_chn, member, False, mode="member_guild_deaf_vc", extra=after.deaf)
+        if before.mute != after.mute:
+            await self.push_audit(log_chn, member, False, mode="member_guild_mute_vc", extra=after.mute)
 
 
 def setup(bot):
